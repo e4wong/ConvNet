@@ -5,6 +5,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.autograd import Variable
 from lib import *
+from networks import *
 import torch.optim as optim
 
 class BasicNet(nn.Module):
@@ -54,7 +55,16 @@ def train(x, y, net):
             loss = criterion(outputs, labels)
             loss.backward()
             optimizer.step()
+
 def main():
+    X,Y = load_shape_data("shape_dataset")
+    X = torch.from_numpy(X).float()
+    Y = torch.from_numpy(Y).long()
+
+    net = ConvolutionalNet()
+    train(X, Y, net)
+
+def main1():
     training_set_x, training_set_y = load_data("training_set")
     training_set_x = torch.from_numpy(training_set_x).float()
     training_set_y = torch.from_numpy(training_set_y).long()
