@@ -4,6 +4,19 @@ from os import listdir
 from os.path import isfile, join
 from lib import *
 import math
+
+def too_small(points):
+	for i in range(0, len(points)):
+		distances = []
+		for j in range(0, len(points)):
+			if i == j:
+				continue
+			distances.append(distance(points[i], points[j]))
+		for d in distances:
+			if d < 300:
+				return True
+	return False
+
 def is_square(points, d):
 	if len(points) != 4:
 		print("messed up")
@@ -42,8 +55,10 @@ for i in range(0,1000):
 				if x + delta_x >= 1000 or y + delta_y >= 1000 or x + delta_x < 0 or y + delta_y < 0:
 					continue
 				if is_square([point1, point2, point3, point4], d):
-					not_found = False
 					points = [point1, point2, point3, point4]
+					if too_small(points):
+						continue
+					not_found = False
 					break
 			if not_found == False:
 				break
