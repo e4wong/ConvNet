@@ -1,6 +1,7 @@
 import numpy
 from random import shuffle
-
+import random
+import math
 def load_shape_data(filename):
     f = open(filename, "r")
     X = []
@@ -29,6 +30,14 @@ def load_shape_data(filename):
     Y = numpy.array(Y)
     X = numpy.array(X)
     return X,Y
+
+def generate_random_point(xmin, xmax, ymin, ymax):
+    return (random.randint(xmin, xmax), random.randint(ymin, ymax))
+
+def distance(point1, point2):
+    (x1, y1) = point1
+    (x2, y2) = point2
+    return math.sqrt( (x2 - x1)**2 + (y2 - y1)**2 )
 
 def load_data(filename):
     f = open(filename, "r")
