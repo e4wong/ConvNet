@@ -25,7 +25,7 @@ for i in range(0,1000):
 		point2 = generate_random_point(200,800, 200, 800)
 		point3 = generate_random_point(200,800, 200, 800)
 		points = [point1, point2, point3]
-		if !too_small(points):
+		if not(too_small(points)):
 			break
 	draw.polygon(points, fill="white")
 	im.save("generated_triangles/" + str(i+1) + ".png","PNG")
