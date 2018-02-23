@@ -8,19 +8,6 @@ from lib import *
 from networks import *
 import torch.optim as optim
 
-class BasicNet(nn.Module):
-    def __init__(self):
-        super(BasicNet, self).__init__()
-        self.fc1 = nn.Linear(785, 120)
-        self.fc2 = nn.Linear(120, 84)
-        self.fc3 = nn.Linear(84, 10)
-        
-    def forward(self, x):
-        x = F.relu(self.fc1(x))
-        x = F.relu(self.fc2(x))
-        x = self.fc3(x)
-        return x
-
 def accuracy(x, y, net):
     if len(x) != len(y):
         print("Something went wrong")
@@ -33,7 +20,7 @@ def accuracy(x, y, net):
     correct += (predicted == labels.data).sum()
     return float(correct) / float(len(y))
 
-def train(x, y, net):
+def train(train_x, train_y, net, test_x, test_y):
     num_epochs = 10
     criterion = nn.CrossEntropyLoss()
     # change optimizer to be what you want
@@ -42,12 +29,12 @@ def train(x, y, net):
     training_accuracy = []
     test_accuracy = []
 
-    training_size = len(x)
+    training_size = len(train_x)
     for epoch in range(num_epochs):
-        print("Starting Epoch:", epoch, accuracy(x, y, net))
+        print("Starting Epoch:", epoch, accuracy(test_x, test_y, net))
         for batch_number in range(0, 9):
-            batch_x = x[int((batch_number * training_size)/10) : int((batch_number + 1) * training_size/10)]
-            batch_y = y[int((batch_number * training_size)/10) : int((batch_number + 1) * training_size/10)]
+            batch_x = train_x[int((batch_number * training_size)/10) : int((batch_number + 1) * training_size/10)]
+            batch_y = train_y[int((batch_number * training_size)/10) : int((batch_number + 1) * training_size/10)]
             inputs, labels = Variable(batch_x), Variable(batch_y)
             optimizer.zero_grad()
 
@@ -57,19 +44,26 @@ def train(x, y, net):
             optimizer.step()
 
 def main():
-    X,Y = load_shape_data("shape_dataset")
-    X = torch.from_numpy(X).float()
-    Y = torch.from_numpy(Y).long()
+    easy_X, easy_Y = load_shape_data("easy_shape_dataset")
+    easy_X = torch.from_numpy(easy_X).float()
+    easy_Y = torch.from_numpy(easy_Y).long()
+    print(len(easy_X), len(easy_Y))
+    easy_net = ConvolutionalNet()
 
-    net = ConvolutionalNet()
-    train(X, Y, net)
+    hard_X, hard_Y = load_shape_data("hard_shape_dataset")
+    hard_X = torch.from_numpy(hard_X).float()
+    hard_Y = torch.from_numpy(hard_Y).long()
+    print(len(hard_X), len(hard_Y))
 
-def main1():
-    training_set_x, training_set_y = load_data("training_set")
-    training_set_x = torch.from_numpy(training_set_x).float()
-    training_set_y = torch.from_numpy(training_set_y).long()
+    hard_net = ConvolutionalNet()
 
-    net = BasicNet()
-    train(training_set_x, training_set_y, net)
+    all_X, all_Y = load_both_shape_data("easy_shape_dataset", "hard_shape_dataset")
+    all_X = torch.from_numpy(all_X).float()
+    all_Y = torch.from_numpy(all_Y).long()
+    print(len(all_X), len(all_Y))
 
+    print("Training Easy")
+    train(easy_X, easy_Y, easy_net, all_X, all_Y)
+    print("Training Hard")
+    train(hard_X, hard_Y, hard_net, all_X, all_Y)
 main()
