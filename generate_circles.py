@@ -6,16 +6,12 @@ from lib import *
 import math
 
 def too_small(points):
-	for i in range(0, len(points)):
-		distances = []
-		for j in range(0, len(points)):
-			if i == j:
-				continue
-			distances.append(distance(points[i], points[j]))
-		for d in distances:
-			if d < 300:
-				return True
+	if abs(points[0][0] - points[1][0]) < 300:
+		return True
+	if abs(points[0][1] - points[1][1]) < 300:
+		return True
 	return False
+
 
 def is_square(points, d):
 	if len(points) != 4:
@@ -43,10 +39,10 @@ for i in range(0,1000):
 	not_found = True
 	points = None
 	while not_found:
-		point1 = generate_random_point(50,900, 50, 900)
-		x_search = list(range(point1[0], 950))
+		point1 = generate_random_point(100,900, 100, 900)
+		x_search = list(range(point1[0], 900))
 		random.shuffle(x_search)
-		y_search = list(range(point1[1], 950))
+		y_search = list(range(point1[1], 900))
 		random.shuffle(y_search)
 		for x in x_search:
 			for y in y_search:

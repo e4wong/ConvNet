@@ -3,8 +3,8 @@ import numpy
 from os import listdir
 from os.path import isfile, join
 
-directories = ['circle', 'square', 'star', 'triangle']
-output_file = "shape_dataset"
+directories = ['generated_ellipses', 'generated_rectangles', 'generated_triangles']
+output_file = "hard_shape_dataset"
 of = open(output_file, 'w')
 for directory in directories:
 	files = [f for f in listdir(directory) if isfile(join(directory, f))]
