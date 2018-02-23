@@ -41,9 +41,9 @@ for i in range(0,1000):
 	points = None
 	while not_found:
 		point1 = generate_random_point(50,900, 50, 900)
-		x_search = list(range(point1[0], 950))
+		x_search = list(range(point1[0], 900))
 		random.shuffle(x_search)
-		y_search = list(range(point1[1], 950))
+		y_search = list(range(point1[1], 900))
 		random.shuffle(y_search)
 		for x in x_search:
 			for y in y_search:
@@ -51,6 +51,9 @@ for i in range(0,1000):
 				height = y - point1[1]
 				new_point = (x, y)
 				points = [point1, new_point]
+				if abs(width - height) < 10:
+					if random.uniform(0,1) < .80:
+						continue
 				if too_small(points):
 					continue
 				else:
@@ -60,4 +63,6 @@ for i in range(0,1000):
 				break
 
 	draw.ellipse(points, fill="white")
+	degrees = random.randint(0,359)
+	im = im.rotate(degrees)
 	im.save("generated_ellipses/" + str(i+1) + ".png","PNG")
