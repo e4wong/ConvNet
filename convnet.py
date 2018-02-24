@@ -20,21 +20,22 @@ def accuracy(x, y, net):
     correct += (predicted == labels.data).sum()
     return float(correct) / float(len(y))
 
-def train(train_x, train_y, net, test_x, test_y):
-    num_epochs = 10
+def train(train_x, train_y, net, full_train_x, full_train_y, test_x, test_y):
+    num_epochs = 7
     criterion = nn.CrossEntropyLoss()
     # change optimizer to be what you want
-    optimizer = optim.Adam(net.parameters(), lr=0.001)
-
+    #optimizer = optim.Adam(net.parameters(), lr=0.001)
+    optimizer = optim.SGD(net.parameters(), lr = 0.01, momentum=.5)
     training_accuracy = []
     test_accuracy = []
 
     training_size = len(train_x)
     for epoch in range(num_epochs):
         print("Starting Epoch:", epoch, accuracy(test_x, test_y, net))
-        for batch_number in range(0, 9):
-            batch_x = train_x[int((batch_number * training_size)/10) : int((batch_number + 1) * training_size/10)]
-            batch_y = train_y[int((batch_number * training_size)/10) : int((batch_number + 1) * training_size/10)]
+        batch_size = 200
+        for iter_num in range(0, 14):
+            batch_x = train_x[batch_size * iter_num : batch_size * (iter_num + 1)]
+            batch_y = train_y[batch_size * iter_num : batch_size * (iter_num + 1)]
             inputs, labels = Variable(batch_x), Variable(batch_y)
             optimizer.zero_grad()
 
@@ -42,6 +43,9 @@ def train(train_x, train_y, net, test_x, test_y):
             loss = criterion(outputs, labels)
             loss.backward()
             optimizer.step()
+            training_accuracy.append(accuracy(full_train_x, full_train_y, net))
+            test_accuracy.append(accuracy(test_x, test_y, net))
+    return (training_accuracy, test_accuracy)
 
 def main():
     easy_X, easy_Y = load_shape_data("easy_shape_dataset")
@@ -63,7 +67,7 @@ def main():
     print(len(all_X), len(all_Y))
 
     print("Training Easy")
-    train(easy_X, easy_Y, easy_net, all_X, all_Y)
+    (easy_training_accuracy, easy_test_accuracy) = train(easy_X, easy_Y, easy_net, all_X, all_Y, all_X, all_Y)
     print("Training Hard")
-    train(hard_X, hard_Y, hard_net, all_X, all_Y)
+    (hard_training_accuracy, hard_test_accuracy) = train(hard_X, hard_Y, hard_net, all_X, all_Y, all_X, all_Y)
 main()

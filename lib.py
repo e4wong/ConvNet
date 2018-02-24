@@ -49,6 +49,7 @@ def load_both_shape_data(filename, filename2):
         rgb = [features2d]
         rgb = numpy.array(rgb)
         total.append(([features2d], label))
+        
     f = open(filename2, "r")
     for line in f:
         tokens = line.split()
