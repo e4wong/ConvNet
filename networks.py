@@ -14,6 +14,21 @@ class BasicNet(nn.Module):
         x = self.fc3(x)
         return x
 
+class FullyConnectedNet(nn.Module):
+    def __init__(self):
+        super(FullyConnectedNet, self).__init__()
+        self.fc1 = nn.Linear(50*50, 1000)
+        self.fc2 = nn.Linear(1000, 100)
+        self.fc3 = nn.Linear(100, 3)
+        
+    def forward(self, x):
+        x = x.view(-1,50*50)
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        x = self.fc3(x)
+        return x
+
+
 class ConvolutionalNet(nn.Module):
     def __init__(self):
         super(ConvolutionalNet, self).__init__()
@@ -28,7 +43,7 @@ class ConvolutionalNet(nn.Module):
         self.conv2_bn = nn.BatchNorm2d(16)
         self.fc1 = nn.Linear(2304, 120)
         self.fc2 = nn.Linear(120, 84)
-        self.fc3 = nn.Linear(84, 4)
+        self.fc3 = nn.Linear(84, 3)
 
     def forward(self,x):
         x=self.conv1_bn(self.conv1(F.relu(self.convr1_bn(self.convr1(x)))))
