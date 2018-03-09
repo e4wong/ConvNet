@@ -28,6 +28,22 @@ class FullyConnectedNet(nn.Module):
         x = self.fc3(x)
         return x
 
+class ShallowConvNet(nn.Module):
+    def __init__(self):
+        super(ShallowConvNet, self).__init__()
+        self.convr1 = nn.Conv2d(1, 6, 5,padding=2) # in channels, out channels, kernel size.
+        self.convr1_bn = nn.BatchNorm2d(6)
+        self.conv1 = nn.Conv2d(6,6,5,padding=2)
+        self.conv1_bn = nn.BatchNorm2d(6)
+        self.pool = nn.MaxPool2d(2) # kernel size
+        self.fc1 = nn.Linear(6 * 25 * 25, 3)
+
+    def forward(self,x):
+        x=self.conv1_bn(self.conv1(F.relu(self.convr1_bn(self.convr1(x)))))
+        x=self.pool(x)
+        x=x.view(-1, 6 * 25 * 25)
+        x = F.relu(self.fc1(x))
+        return x
 
 class ConvolutionalNet(nn.Module):
     def __init__(self):

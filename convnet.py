@@ -22,7 +22,7 @@ def accuracy(x, y, net):
     return float(correct) / float(len(y))
 
 def train(train_x, train_y, net, full_train_x, full_train_y, test_x, test_y):
-    num_epochs = 50
+    num_epochs = 75
     criterion = nn.CrossEntropyLoss()
     # change optimizer to be what you want
     optimizer = optim.Adam(net.parameters(), lr=0.001)
@@ -54,21 +54,21 @@ def main():
     easy_X = torch.from_numpy(easy_X).float()
     easy_Y = torch.from_numpy(easy_Y).long()
     print(len(easy_X), len(easy_Y))
-    easy_net = FullyConnectedNet()
+    easy_net = ShallowConvNet()
 
     hard_X, hard_Y = load_shape_data("hard_shape_dataset")
     hard_X = torch.from_numpy(hard_X).float()
     hard_Y = torch.from_numpy(hard_Y).long()
     print(len(hard_X), len(hard_Y))
 
-    hard_net = FullyConnectedNet()
+    hard_net = ShallowConvNet()
 
     train_X, train_Y = load_both_shape_data("easy_shape_dataset", "hard_shape_dataset")
     train_X = torch.from_numpy(train_X).float()
     train_Y = torch.from_numpy(train_Y).long()
     print(len(train_X), len(train_Y))
 
-    random_net = FullyConnectedNet()
+    random_net = ShallowConvNet()
 
     test_X, test_Y = load_shape_data("test_hard_shape_dataset")
     test_X = torch.from_numpy(test_X).float()
